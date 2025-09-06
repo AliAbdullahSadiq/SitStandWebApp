@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sit-Stand Desk Reminder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #f4f4f9;
+    }
+    h1 { margin-bottom: 1rem; }
+    .timer {
+      font-size: 2rem;
+      margin: 1rem 0;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+    }
+    .start { background: #4caf50; color: white; }
+    .stop { background: #f44336; color: white; }
+    .config { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Sit-Stand Desk Reminder</h1>
+  <p class="timer" id="timer">00:00</p>
+  <p id="status">Status: Sitting</p>
+
+  <button class="start" onclick="startTimer()">Start</button>
+  <button class="stop" onclick="stopTimer()">Stop</button>
+
+  <div class="config">
+    <label>Sit duration (minutes): <input type="number" id="sitDuration" value="50"></label><br>
+    <label>Stand duration (minutes): <input type="number" id="standDuration" value="10"></label>
+  </div>
+
+  <!-- Auto-load sounds from same folder -->
+  <audio id="sitSound" src="sit.mp3"></audio>
+  <audio id="standSound" src="stand.mp3"></audio>
+
+  <script>
+    let timerInterval;
+    let timeRemaining;
+    let isStanding = false;
+
+    const sitSound = document.getElementById('sitSound');
+    const standSound = document.getElementById('standSound');
+
+    function startTimer() {
+      stopTimer(); // reset any running timer
+      isStanding = false;
+      startPeriod();
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      document.getElementById('timer').textContent = "00:00";
+      document.getElementById('status').textContent = "Status: Stopped";
+    }
+
+    function startPeriod() {
+      let sitDuration = parseInt(document.getElementById('sitDuration').value, 10) * 60;
+      let standDuration = parseInt(document.getElementById('standDuration').value, 10) * 60;
+      timeRemaining = isStanding ? standDuration : sitDuration;
+      updateDisplay();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateDisplay();
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          togglePeriod();
+        }
+      }, 1000);
+    }
+
+    function togglePeriod() {
+      isStanding = !isStanding;
+      if (isStanding) {
+        document.getElementById('status').textContent = "Status: STAND UP!";
+        standSound.play();
+      } else {
+        document.getElementById('status').textContent = "Status: Sit Down.";
+        sitSound.play();
+      }
+      startPeriod();
+    }
+
+    function updateDisplay() {
+      let minutes = Math.floor(timeRemaining / 60);
+      let seconds = timeRemaining % 60;
+      document.getElementById('timer').textContent =
+        String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
+    }
+  </script>
+</body>
+</html>

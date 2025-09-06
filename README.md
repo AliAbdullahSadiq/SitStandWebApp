@@ -1,3 +1,4 @@
+<img width="1601" height="1061" alt="screenshot" src="https://github.com/user-attachments/assets/ebdaf34b-3a21-4295-8520-d10713ce68c5" />
 # Sit-Stand Desk Reminder
 
 A simple, self-hosted web app that reminds you to alternate between sitting and standing at your desk. Fully customizable timers let you set your preferred sit and stand durations, and you can add your own alert sounds. Runs entirely in the browser — no server required. Perfect for improving posture and staying active while working.
